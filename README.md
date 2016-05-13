@@ -45,8 +45,9 @@ iex(5)> ExChain.complete_sentence("i love")
 
 The meat and potatos are located in just three files:
 
-| lib/ex_chain/datasource.ex   | This file parses the tweets located in the data folder.            |
+| File                         | what it does                                                       |
 |------------------------------|--------------------------------------------------------------------|
+| lib/ex_chain/datasource.ex   | This file parses the tweets located in the data folder.            |
 | lib/ex_chain/markov_model.ex | This file is in charge of holding the state of the "Markov Model". |
 | lib/ex_chain.ex              | This file generates the sentences using the Markov Model.          |
 
