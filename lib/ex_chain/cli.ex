@@ -1,4 +1,6 @@
 defmodule ExChain.CLI do
+  alias ExChain.SentenceGenerator
+
   def main(argv) do
     argv
     |> parse_args
@@ -28,7 +30,7 @@ defmodule ExChain.CLI do
   end
 
   def process(:generate_sentence) do
-    case ExChain.create_filtered_sentence do
+    case SentenceGenerator.create_filtered_sentence do
       {:ok, sentence, _prob, _tries} ->
         IO.puts(sentence)
         System.halt(0)

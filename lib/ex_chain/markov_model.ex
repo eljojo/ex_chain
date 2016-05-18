@@ -1,6 +1,12 @@
 defmodule ExChain.MarkovModel do
   def start_link do
-    Agent.start_link(fn -> Map.new end, name: __MODULE__)
+    :random.seed(:os.timestamp)
+
+    res = Agent.start_link(fn -> Map.new end, name: __MODULE__)
+
+    ExChain.MarkovModel.populate_model(ExChain.FileDatasource.get_data)
+
+    res
   end
 
   def populate_model(datasource) when is_list(datasource) do
@@ -9,11 +15,17 @@ defmodule ExChain.MarkovModel do
   end
 
   def populate_model(text) when is_binary(text) do
-    tokens = ExChain.tokenize(text)
+    tokens = tokenize(text)
     tokens |> Enum.with_index |> Enum.each(fn ({token, index}) ->
       markov_state = get_markov_state(tokens, index)
       add_token(markov_state, token)
     end)
+  end
+
+  def tokenize(str) do
+    str
+    |> String.split
+    |> Enum.reject(fn s -> String.length(s) == 0 end)
   end
 
   defp add_token(markov_state, token) do

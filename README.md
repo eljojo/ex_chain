@@ -28,16 +28,16 @@ $ iex -S mix # analog to irb or rails console
 Inside iex, you can generate new messages by typing:
 
 ```elixir
-iex(1)> ExChain.create_filtered_sentence
+iex(1)> ExChain.SentenceGenerator.create_filtered_sentence
 {:ok, "I'm not a Food Social Network?", 0.4668037713169559, 4}
-iex(2)> ExChain.create_filtered_sentence
+iex(2)> ExChain.SentenceGenerator.create_filtered_sentence
 {:ok, "I am in churros.", 0.30839889769910056, 2}
-iex(3)> ExChain.create_filtered_sentence
+iex(3)> ExChain.SentenceGenerator.create_filtered_sentence
 {:ok, "I'm never sleeping again.", 0.3546596799639396, 14}
-iex(4)> ExChain.create_sentence
+iex(4)> ExChain.SentenceGenerator.create_sentence
 {"future: scumbag apple: makes you release the happiness hormone.",
  0.8334241103848947}
-iex(5)> ExChain.complete_sentence("i love")
+iex(5)> ExChain.SentenceGenerator.complete_sentence("i love")
 {"i love the smell of shipping technical debt", 0.6685185185185185}
 ```
 
@@ -45,13 +45,11 @@ iex(5)> ExChain.complete_sentence("i love")
 
 The meat and potatos are located in just three files:
 
-| File                         | what it does                                                       |
-|------------------------------|--------------------------------------------------------------------|
-| lib/ex_chain/datasource.ex   | This file parses the tweets located in the data folder.            |
-| lib/ex_chain/markov_model.ex | This file is in charge of holding the state of the "Markov Model". |
-| lib/ex_chain.ex              | This file generates the sentences using the Markov Model.          |
-
-As soon as I find more time, I'll document as much as I can.
+| File                               | what it does                                                       |
+|------------------------------------|--------------------------------------------------------------------|
+| lib/ex_chain/file_datasource.ex    | This file parses the tweets located in the data folder.            |
+| lib/ex_chain/markov_model.ex       | This file is in charge of holding the state of the "Markov Model". |
+| lib/ex_chain/sentence_generator.ex | This file generates the sentences using the Markov Model.          |
 
 ### CLI
 
