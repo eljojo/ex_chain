@@ -3,6 +3,7 @@ defmodule ExChain.Mixfile do
 
   def project do
     [app: :ex_chain,
+     escript: escript_config,
      version: "0.0.1",
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
@@ -31,5 +32,9 @@ defmodule ExChain.Mixfile do
     [
       {:poison, "~> 2.0"}
     ]
+  end
+
+  defp escript_config do
+    [ main_module: ExChain.CLI ]
   end
 end

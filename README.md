@@ -53,4 +53,17 @@ The meat and potatos are located in just three files:
 
 As soon as I find more time, I'll document as much as I can.
 
+### CLI
+
+ExChain also has a CLI interface.
+To use it, you first need to compile the application into an escript (Erlang VM) binary.
+
+```
+$ mix escript.build
+$ ./ex_chain generate_sentence
+I think currywurst is the best time to wake up.
+```
+
+## Suggestions
+
 Please send me all your suggestions to [@eljojo](https://twitter.com/eljojo) or directly to my email jojo at eljojo dot net.
