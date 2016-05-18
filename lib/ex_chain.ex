@@ -71,7 +71,7 @@ defmodule ExChain do
     opts = [strategy: :one_for_one, name: ExChain.Supervisor]
     res = Supervisor.start_link(children, opts)
 
-    ExChain.MarkovModel.populate_model()
+    ExChain.MarkovModel.populate_model(ExChain.FileDatasource.get_data)
 
     res
   end

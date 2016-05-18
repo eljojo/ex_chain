@@ -3,14 +3,12 @@ defmodule ExChain.MarkovModel do
     Agent.start_link(fn -> Map.new end, name: __MODULE__)
   end
 
-  def populate_model do
-    for text <- ExChain.Datasource.get_data do
-      populate_model(text)
-    end
-    nil
+  def populate_model(datasource) when is_list(datasource) do
+    for text <- datasource, do: populate_model(text)
+    {:ok}
   end
 
-  def populate_model(text) do
+  def populate_model(text) when is_binary(text) do
     tokens = ExChain.tokenize(text)
     tokens |> Enum.with_index |> Enum.each(fn ({token, index}) ->
       markov_state = get_markov_state(tokens, index)
@@ -18,7 +16,7 @@ defmodule ExChain.MarkovModel do
     end)
   end
 
-  def add_token(markov_state, token) do
+  defp add_token(markov_state, token) do
     Agent.update(__MODULE__, fn model ->
       current_state = model[markov_state] || []
       new_state = [token | current_state]

@@ -1,4 +1,4 @@
-defmodule ExChain.Datasource do
+defmodule ExChain.FileDatasource do
   def get_data do
     files = Path.wildcard("./data/*.js")
     files
@@ -7,7 +7,11 @@ defmodule ExChain.Datasource do
       |> List.flatten
   end
 
-  def process_file(file) do
+  defp process_file_async(file) do
+    Task.async(fn -> process_file(file) end)
+  end
+
+  defp process_file(file) do
     case File.read(file) do
       {:ok, contents} ->
         contents
@@ -20,15 +24,11 @@ defmodule ExChain.Datasource do
     end
   end
 
-  def process_file_async(file) do
-    Task.async(fn -> process_file(file) end)
-  end
-
-  def extract_texts(tweets) do
+  defp extract_texts(tweets) do
     Enum.map(tweets, fn (tweet) -> tweet["text"] end)
   end
 
-  def filter_unwanted_tweets(tweets) do
+  defp filter_unwanted_tweets(tweets) do
     regex = ~r/((^(@|rt))|http|@)/i
     tweets |> Enum.filter(fn (tweet) -> !Regex.match?(regex, tweet) end)
   end
