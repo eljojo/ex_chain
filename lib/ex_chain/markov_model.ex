@@ -31,13 +31,14 @@ defmodule ExChain.MarkovModel do
     end)
   end
 
-  def get_state_tokens(pid, markov_state) do
-    Agent.get(pid, fn model -> model[markov_state] || [] end)
-  end
+  def get_state_tokens(pid, markov_state),
+  do: Agent.get(pid, fn model -> model[markov_state] || [] end)
 
-  def remove_state_token(pid, markov_state) do
-    Agent.update(pid, &Map.delete(&1, markov_state))
-  end
+  def remove_state_token(pid, markov_state),
+  do: Agent.update(pid, &Map.delete(&1, markov_state))
+
+  def reset_model(pid),
+  do: Agent.update(pid, &Map.new/0)
 
   def get_markov_state(tokens) do
     get_markov_state(tokens, length(tokens))
