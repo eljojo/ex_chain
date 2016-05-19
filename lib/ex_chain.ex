@@ -9,7 +9,6 @@ defmodule ExChain do
     children = [
       # Define workers and child supervisors to be supervised
       # worker(ExChain.Worker, [arg1, arg2, arg3]),
-      worker(ExChain.MarkovModel, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

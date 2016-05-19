@@ -1,10 +1,13 @@
 defmodule ExChain.CLI do
   alias ExChain.SentenceGenerator
+  alias ExChain.MarkovModel
+  alias ExChain.FileDatasource
 
   def main(argv) do
     argv
     |> parse_args
     |> process
+    System.halt(0)
   end
 
   def parse_args(argv) do
@@ -30,14 +33,14 @@ defmodule ExChain.CLI do
   end
 
   def process(:generate_sentence) do
-    case SentenceGenerator.create_filtered_sentence do
+    {:ok, model} = MarkovModel.start_link
+    MarkovModel.populate_model(model, FileDatasource.get_data)
+    case SentenceGenerator.create_filtered_sentence(model) do
       {:ok, sentence, _prob, _tries} ->
         IO.puts(sentence)
-        System.halt(0)
       _ ->
         IO.puts("Couldn't generate sentence")
         System.halt(1)
     end
   end
 end
-

@@ -1,24 +1,19 @@
 defmodule ExChain.MarkovModel do
   def start_link do
     :random.seed(:os.timestamp)
-
-    res = Agent.start_link(fn -> Map.new end, name: __MODULE__)
-
-    ExChain.MarkovModel.populate_model(ExChain.FileDatasource.get_data)
-
-    res
+    Agent.start_link(fn -> Map.new end)
   end
 
-  def populate_model(datasource) when is_list(datasource) do
-    for text <- datasource, do: populate_model(text)
+  def populate_model(pid, datasource) when is_list(datasource) do
+    for text <- datasource, do: populate_model(pid, text)
     {:ok}
   end
 
-  def populate_model(text) when is_binary(text) do
+  def populate_model(pid, text) when is_binary(text) do
     tokens = tokenize(text)
     tokens |> Enum.with_index |> Enum.each(fn ({token, index}) ->
       markov_state = get_markov_state(tokens, index)
-      add_token(markov_state, token)
+      add_token(pid, markov_state, token)
     end)
   end
 
@@ -28,20 +23,20 @@ defmodule ExChain.MarkovModel do
     |> Enum.reject(fn s -> String.length(s) == 0 end)
   end
 
-  defp add_token(markov_state, token) do
-    Agent.update(__MODULE__, fn model ->
+  defp add_token(pid, markov_state, token) do
+    Agent.update(pid, fn model ->
       current_state = model[markov_state] || []
       new_state = [token | current_state]
       model |> Map.put(markov_state, new_state)
     end)
   end
 
-  def get_state_tokens(markov_state) do
-    Agent.get(__MODULE__, fn model -> model[markov_state] || [] end)
+  def get_state_tokens(pid, markov_state) do
+    Agent.get(pid, fn model -> model[markov_state] || [] end)
   end
 
-  def remove_state_token(markov_state) do
-    Agent.update(__MODULE__, &Map.delete(&1, markov_state))
+  def remove_state_token(pid, markov_state) do
+    Agent.update(pid, &Map.delete(&1, markov_state))
   end
 
   def get_markov_state(tokens) do
@@ -63,8 +58,8 @@ defmodule ExChain.MarkovModel do
     {value1, value2}
   end
 
-  def get_random_token(markov_state) do
-    tokens = get_state_tokens(markov_state)
+  def get_random_token(pid, markov_state) do
+    tokens = get_state_tokens(pid, markov_state)
     if length(tokens) > 0 do
       token = Enum.random(tokens)
       token_count = Enum.count(tokens, fn t -> t == token end) * 1.0
